@@ -36,4 +36,37 @@ router.post(
   }
 );
 
+router.put(
+  "/:id",
+  projectMd.checkProjectId,
+  projectMd.checkProject,
+  async (req, res, next) => {
+    try {
+      let project = req.body;
+      const nebakalim = await projectModel.update(req.params.id, project);
+      res.status(201).json(nebakalim);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.delete("/:id", projectMd.checkProjectId, async (req, res, next) => {
+  try {
+    await projectModel.remove(req.params.id);
+    //!hiçbir şey yazmayınca hata verdi
+    res.status(201).json({ message: "Silme işlemi başarılı" });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/:id/actions", projectMd.checkProjectId, async (req, res, next) => {
+  try {
+    let nebakalim = await projectModel.getProjectActions(req.params.id);
+    res.status(201).json(nebakalim);
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = router;
